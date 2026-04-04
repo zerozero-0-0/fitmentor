@@ -1,0 +1,38 @@
+{
+  "languages": {
+    "CSS": {
+      "formatter": {
+        "language_server": {
+          "name": "biome"
+        }
+      }
+    },
+    "TSX": {
+      "formatter": {
+        "language_server": {
+          "name": "biome"
+        }
+      }
+    },
+    "TypeScript": {
+      "formatter": {
+        "language_server": {
+          "name": "biome"
+        }
+      }
+    }
+  },
+  "lsp": {
+    "biome": {
+      "binary": {
+        "path": "./frontend/node_modules/@biomejs/biome/bin/biome",
+        "arguments": [
+          "lsp-proxy"
+        ]
+      },
+      "settings": {
+        "config_path": "./frontend/biome.json"
+      }
+    }
+  }
+}
