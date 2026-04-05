@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: frontend-biome-check
+        name: Frontend Biome Check
+        entry: bash -c "cd frontend && pnpm check"
+        language: system
+        types: [file]
+        pass_filenames: false
