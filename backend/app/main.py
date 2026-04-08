@@ -1,5 +1,7 @@
 from fastapi import FastAPI
-from services.trainer import make_response
+
+from app.services.trainer import make_response
+
 app = FastAPI()
 
 @app.get("/")
