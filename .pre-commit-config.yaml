@@ -7,3 +7,10 @@ repos:
         language: system
         types: [file]
         pass_filenames: false
+        
+      - id: backend-ty-and-ruff-check
+        name: Backend ty And ruff Check
+        entry: bash -c "cd backend && uvx ruff check && uvx ty check"
+        language: system
+        types: [file]
+        pass_filenames: false

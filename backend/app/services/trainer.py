@@ -11,6 +11,9 @@ def make_response(prompt: str) -> str:
         contents=[prompt],
     )
     
+    if response.text is None:
+        return "Failed to generate a response."
+        
     return response.text
 
 if __name__ == "__main__":
