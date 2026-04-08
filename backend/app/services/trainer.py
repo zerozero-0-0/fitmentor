@@ -11,10 +11,10 @@ def make_response(prompt: str) -> str:
         contents=[prompt],
     )
     
-    if response.text is None:
+    if not response.candidates:
         return "Failed to generate a response."
-        
-    return response.text
+
+    return response.text or "Failed to generate a response."
 
 if __name__ == "__main__":
     make_response("What is the best way to lose weight?")
