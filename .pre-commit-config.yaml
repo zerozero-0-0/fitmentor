@@ -6,4 +6,13 @@ repos:
         entry: bash -c "cd frontend && pnpm check"
         language: system
         types: [file]
+        files: ^frontend/
+        pass_filenames: false
+        
+      - id: backend-ty-and-ruff-check
+        name: Backend Ty and Ruff Check
+        entry: bash -c "cd backend && uvx ruff check && uvx ty check"
+        language: system
+        types: [file]
+        files: ^backend/
         pass_filenames: false

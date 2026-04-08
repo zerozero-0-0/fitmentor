@@ -8,7 +8,6 @@
 		"build": "tsc -b && vite build",
 		"lint": "pnpm exec biome lint --write",
 		"preview": "vite preview",
-		"prepare": "husky",
 		"format": "pnpm exec biome format --write",
 		"check": "pnpm exec biome check --write"
 	},
