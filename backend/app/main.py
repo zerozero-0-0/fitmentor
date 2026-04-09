@@ -56,27 +56,23 @@ def create_session(
                 detail=f"Unknown exercise_id: {detail.exercise_id}",
             )
 
-    # WorkoutSessionを作成
-    db_session = WorkoutSession(
-        session_date=workout_session.session_date,
-        condition=workout_session.condition,
-    )
-    session.add(db_session)
-    session.flush()  # session.idを取得するためにflush
-    if db_session.id is None:
-        raise HTTPException(status_code=500, detail="Failed to allocate session id")
-    session_id = db_session.id
-
-    # WorkoutDetailを作成
-    for detail in workout_session.details:
-        db_detail = WorkoutDetail(
-            session_id=session_id,
+    details = [
+        WorkoutDetail(
             exercise_id=detail.exercise_id,
             weight=detail.weight,
             reps=detail.reps,
             sets=detail.sets,
         )
-        session.add(db_detail)
+        for detail in workout_session.details
+    ]
+
+    # WorkoutSessionを作成
+    db_session = WorkoutSession(
+        session_date=workout_session.session_date,
+        condition=workout_session.condition,
+        details=details,
+    )
+    session.add(db_session)
 
     session.commit()
     session.refresh(db_session)

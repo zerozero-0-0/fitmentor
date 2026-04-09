@@ -23,13 +23,18 @@ class WorkoutSession(SQLModel, table=True):
     details: list["WorkoutDetail"] = Relationship(
         back_populates="session",
         cascade_delete=True,
+        sa_relationship_kwargs={"lazy": "selectin"},
     )
 
 
 class WorkoutDetail(SQLModel, table=True):
     """詳細記録"""
     id: int | None = Field(default=None, primary_key=True)
-    session_id: int = Field(foreign_key="workoutsession.id", index=True)
+    session_id: int | None = Field(
+        default=None,
+        foreign_key="workoutsession.id",
+        index=True,
+    )
     exercise_id: int = Field(index=True)
     weight: float = Field(ge=0)
     reps: int = Field(ge=1)
