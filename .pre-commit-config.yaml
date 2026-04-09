@@ -11,7 +11,7 @@ repos:
         
       - id: backend-ty-and-ruff-check
         name: Backend Ty and Ruff Check
-        entry: bash -c "cd backend && uvx ruff check && uvx ty check"
+        entry: bash -c "cd backend && uv run ruff check && uv run ty check"
         language: system
         types: [file]
         files: ^backend/

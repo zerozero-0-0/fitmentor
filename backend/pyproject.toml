@@ -7,7 +7,10 @@ requires-python = ">=3.10"
 dependencies = [
     "fastapi[standard]>=0.135.3",
     "google-genai>=1.70.0",
+    "greenlet<3.4",
+    "psycopg2-binary>=2.9.11",
     "python-dotenv>=1.2.2",
+    "sqlmodel>=0.0.38",
 ]
 [tool.fastapi]
 entrypoint = "main:app"
@@ -17,3 +20,25 @@ dev = [
     "ruff>=0.15.9",
     "ty>=0.0.28",
 ]
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "UP", "SIM", "RUF", "PT", "N", "C4"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["server"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.ty]
+
+[tool.ty.rules]
+invalid-assignment = "error"
+possibly-unresolved-reference = "warn"
+
+[tool.ty.analysis]
+respect-type-ignore-comments = true
