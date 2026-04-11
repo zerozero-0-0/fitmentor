@@ -30,8 +30,7 @@ class WorkoutSession(SQLModel, table=True):
 class WorkoutDetail(SQLModel, table=True):
     """詳細記録"""
     id: int | None = Field(default=None, primary_key=True)
-    session_id: int | None = Field(
-        default=None,
+    session_id: int = Field(
         foreign_key="workoutsession.id",
         index=True,
     )

@@ -48,7 +48,7 @@ def create_session(
     workout_session: WorkoutSessionCreate,
     session: Annotated[Session, Depends(get_session)],
 ) -> WorkoutSession:
-    """日々の記録の登録(WorkoutSessionと複数のWorkoutDetailを一度のトランザクションでDBに保存)"""
+    """日々の記録の登録(WorkoutSessionを先に作成し、紐づくWorkoutDetailを保存)"""
     for detail in workout_session.details:
         if detail.exercise_id not in TRAININGS_BY_ID:
             raise HTTPException(
@@ -56,23 +56,28 @@ def create_session(
                 detail=f"Unknown exercise_id: {detail.exercise_id}",
             )
 
-    details = [
-        WorkoutDetail(
-            exercise_id=detail.exercise_id,
-            weight=detail.weight,
-            reps=detail.reps,
-            sets=detail.sets,
-        )
-        for detail in workout_session.details
-    ]
-
-    # WorkoutSessionを作成
     db_session = WorkoutSession(
         session_date=workout_session.session_date,
         condition=workout_session.condition,
-        details=details,
     )
     session.add(db_session)
+    session.flush()
+
+    if db_session.id is None:
+        raise HTTPException(status_code=500, detail="Failed to create session")
+
+    session.add_all(
+        [
+            WorkoutDetail(
+                session_id=db_session.id,
+                exercise_id=detail.exercise_id,
+                weight=detail.weight,
+                reps=detail.reps,
+                sets=detail.sets,
+            )
+            for detail in workout_session.details
+        ]
+    )
 
     session.commit()
     session.refresh(db_session)
