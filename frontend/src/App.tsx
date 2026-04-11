@@ -1,15 +1,8 @@
-import { Textarea } from "@/components/ui/textarea";
-import "./App.css";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-const queryClient = new QueryClient();
+import { TrainingSelector } from "@/features/trainings/components/training-selector";
+import { EXERCISES } from "@/features/trainings/constants/exercises";
 
 function App() {
-	return (
-		<QueryClientProvider client={queryClient}>
-			<Textarea placeholder="Type your message here..." />
-		</QueryClientProvider>
-	);
+	return <TrainingSelector exercises={EXERCISES} />;
 }
 
 export default App;
