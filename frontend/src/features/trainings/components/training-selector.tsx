@@ -70,13 +70,13 @@ export function TrainingSelector({ exercises }: TrainingSelectorProps) {
 		});
 	};
 
-	const handleTouchStart = (event: TouchEvent<HTMLDivElement>) => {
+	const handleTouchStart = (event: TouchEvent<HTMLElement>) => {
 		const touch = event.changedTouches[0];
 		touchStartX.current = touch.clientX;
 		touchStartY.current = touch.clientY;
 	};
 
-	const handleTouchEnd = (event: TouchEvent<HTMLDivElement>) => {
+	const handleTouchEnd = (event: TouchEvent<HTMLElement>) => {
 		if (touchStartX.current === null || touchStartY.current === null) {
 			return;
 		}

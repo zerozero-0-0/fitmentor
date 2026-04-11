@@ -1,12 +1,12 @@
 ## Fitmentor
 
 ## Abstract
-This application is designed to manage my exercise.
-It is used by iPhone on Chrome.
-It has a below features:
-- Exercise management: I can take a log of my exercise(name, weight, rep, etc).
-- Propose today's exercise: using gemini api, previos exercise data, and today's my condation, it proposes today's exercise.
-- Exercise history: I can see my exercise.
+This application is designed to help me manage my exercise routine.
+It is used on an iPhone through Chrome.
+It has the following features:
+- Exercise management: I can log my exercises, including the name, weight, reps, and other details.
+- Today's exercise suggestions: Using the Gemini API, previous exercise data, and my condition today, it suggests today's exercise plan.
+- Exercise history: I can review my past exercise records.
 
 ## Tech stack
 - mise: 2026.2.22
