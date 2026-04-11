@@ -1,6 +1,15 @@
 import type { TouchEvent } from "react";
 import { useMemo, useRef, useState } from "react";
 
+import bikeMachineIcon from "@/assets/icons/exercises/bike-machine.svg";
+import chestPressIcon from "@/assets/icons/exercises/chest-press.svg";
+import chinUpAndDownIcon from "@/assets/icons/exercises/chin-up-and-down.svg";
+import latPullDownIcon from "@/assets/icons/exercises/lat-pull-down.svg";
+import legCurlIcon from "@/assets/icons/exercises/leg-curl.svg";
+import legExtensionIcon from "@/assets/icons/exercises/leg-extension.svg";
+import legPressIcon from "@/assets/icons/exercises/leg-press.svg";
+import runningMachineIcon from "@/assets/icons/exercises/running-machine.svg";
+import shoulderPressIcon from "@/assets/icons/exercises/shoulder-press.svg";
 import type { Exercise, TrainingType } from "@/features/trainings/types";
 
 const TRAINING_TYPE_LABEL: Record<TrainingType, string> = {
@@ -10,6 +19,18 @@ const TRAINING_TYPE_LABEL: Record<TrainingType, string> = {
 
 type TrainingSelectorProps = {
 	exercises: Exercise[];
+};
+
+const EXERCISE_ICON_BY_ID: Partial<Record<number, string>> = {
+	1: runningMachineIcon,
+	2: bikeMachineIcon,
+	3: chinUpAndDownIcon,
+	5: chestPressIcon,
+	6: latPullDownIcon,
+	7: shoulderPressIcon,
+	8: legPressIcon,
+	9: legExtensionIcon,
+	10: legCurlIcon,
 };
 
 export function TrainingSelector({ exercises }: TrainingSelectorProps) {
@@ -74,13 +95,6 @@ export function TrainingSelector({ exercises }: TrainingSelectorProps) {
 
 	return (
 		<div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-4 py-8">
-			<header className="space-y-2">
-				<h1 className="text-2xl font-semibold">トレーニング選択</h1>
-				<p className="text-sm text-zinc-600">
-					実施した種目を1つずつ追加してください。
-				</p>
-			</header>
-
 			<div className="inline-flex w-fit rounded-lg border border-zinc-200 p-1">
 				{(["anaerobic", "aerobic"] as TrainingType[]).map((trainingType) => (
 					<button
@@ -104,14 +118,6 @@ export function TrainingSelector({ exercises }: TrainingSelectorProps) {
 				onTouchStart={handleTouchStart}
 				onTouchEnd={handleTouchEnd}
 			>
-				<div className="flex items-center justify-between">
-					<h2 className="text-lg font-medium">
-						{TRAINING_TYPE_LABEL[activeType]}
-					</h2>
-					<p className="text-xs text-zinc-500">
-						モバイルでは左右スワイプで切替
-					</p>
-				</div>
 				<div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
 					{visibleExercises.map((exercise) => (
 						<button
@@ -120,6 +126,18 @@ export function TrainingSelector({ exercises }: TrainingSelectorProps) {
 							className="rounded-lg border border-zinc-200 p-4 text-left transition hover:border-zinc-300"
 						>
 							<p className="font-medium">{exercise.name}</p>
+							<div className="mt-3 flex h-28 w-full items-center justify-center overflow-hidden rounded-md border border-zinc-200 bg-zinc-50 p-3">
+								{EXERCISE_ICON_BY_ID[exercise.id] ? (
+									<img
+										src={EXERCISE_ICON_BY_ID[exercise.id]}
+										alt={`${exercise.name} icon`}
+										className="h-full w-full object-contain"
+										loading="lazy"
+									/>
+								) : (
+									<span className="text-xs text-zinc-500">アイコン準備中</span>
+								)}
+							</div>
 							<p className="mt-2 text-sm text-zinc-600">
 								対象: {exercise.targetMuscles.join(" / ")}
 							</p>
