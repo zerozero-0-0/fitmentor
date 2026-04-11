@@ -1,16 +1,16 @@
-from google import genai
 from dotenv import load_dotenv
+from google import genai
 
 load_dotenv()
 
 def make_response(prompt: str) -> str:
     client = genai.Client()
-    
+
     response = client.models.generate_content(
         model="gemini-3-flash-preview",
         contents=[prompt],
     )
-    
+
     if not response.candidates:
         return "Failed to generate a response."
 
