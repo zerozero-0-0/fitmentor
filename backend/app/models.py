@@ -47,13 +47,13 @@ class WorkoutDetailCreate(SQLModel):
     exercise_id: int
     weight: float = Field(ge=0)
     reps: int = Field(ge=1)
-    sets: int = Field(ge=1)
+    sets: int = Field(default=1, ge=1)
 
 
 class WorkoutSessionCreate(SQLModel):
     """セッション作成用スキーマ(詳細レコードを含む)"""
     session_date: date
-    condition: int = Field(ge=1, le=5)
+    condition: int = Field(default=3, ge=1, le=5)
     details: list[WorkoutDetailCreate]
 
 

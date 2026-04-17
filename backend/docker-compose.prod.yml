@@ -1,0 +1,12 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+    command: uv run fastapi run --host 0.0.0.0 --port 8000

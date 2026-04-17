@@ -1,7 +1,9 @@
+import os
 from contextlib import asynccontextmanager
 from typing import Annotated
 
 from fastapi import Depends, FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import Session, SQLModel, select
 
 from app.database import engine, get_session
@@ -24,6 +26,15 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+frontend_origin = os.getenv("FRONTEND_ORIGIN", "http://localhost:5173")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[frontend_origin],
+    allow_origin_regex=r"https?://(localhost|127\.0\.0\.1|0\.0\.0\.0|192\.168\.\d{1,3}\.\d{1,3})(:\d+)?$",
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/")
@@ -49,6 +60,9 @@ def create_session(
     session: Annotated[Session, Depends(get_session)],
 ) -> WorkoutSession:
     """日々の記録の登録(WorkoutSessionを先に作成し、紐づくWorkoutDetailを保存)"""
+    if not workout_session.details:
+        raise HTTPException(status_code=400, detail="details must not be empty")
+
     for detail in workout_session.details:
         if detail.exercise_id not in TRAININGS_BY_ID:
             raise HTTPException(

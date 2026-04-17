@@ -12,3 +12,7 @@
 ## 環境変数
 Docker起動前に `.env.example` をコピーして `.env` を作成し、必要な値を設定してください。
 Docker Compose 利用時は `GEMINI_API_KEY` もルートの `.env` に設定してください。
+
+## Docker Compose
+- 開発用: `docker compose -f docker-compose.dev.yml up --build`
+- 本番想定: `docker compose -f docker-compose.prod.yml up --build -d`
