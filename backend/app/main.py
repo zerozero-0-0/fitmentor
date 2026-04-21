@@ -1,5 +1,6 @@
 import os
 from contextlib import asynccontextmanager
+from datetime import date, timedelta
 from typing import Annotated
 
 from fastapi import Depends, FastAPI, HTTPException
@@ -32,7 +33,6 @@ frontend_origin = os.getenv("FRONTEND_ORIGIN", "http://localhost:5173")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[frontend_origin],
-    allow_origin_regex=r"https?://(localhost|127\.0\.0\.1|0\.0\.0\.0|192\.168\.\d{1,3}\.\d{1,3})(:\d+)?$",
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -106,8 +106,6 @@ def suggest(
     session: Annotated[Session, Depends(get_session)],
 ) -> SuggestResponse:
     """コンディションと運動可能時間をもとに今日のメニューを提案"""
-    from datetime import date, timedelta
-
     since = date.today() - timedelta(days=7)
     statement = select(WorkoutSession).where(WorkoutSession.session_date >= since)
     sessions = session.exec(statement).all()
