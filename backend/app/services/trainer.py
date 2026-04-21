@@ -13,7 +13,7 @@ _MODEL = "gemini-3-flash-preview"
 def make_response(prompt: str) -> str:
     client = genai.Client()
     response = client.models.generate_content(
-        model="gemini-3-flash-preview",
+        model=_MODEL,
         contents=[prompt],
     )
     if not response.candidates:
