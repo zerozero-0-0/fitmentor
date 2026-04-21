@@ -7,12 +7,15 @@ It has the following features:
 - Exercise management: I can log my exercises, including the name, weight, reps, and other details.
 - Today's exercise suggestions: Using the Gemini API, previous exercise data, and my condition today, it suggests today's exercise plan.
 - Exercise history: I can review my past exercise records.
+- For development, use docker-compose.dev.yml; for production, use docker-compose.prod.yml.
 
 ## Tech stack
 - mise: 2026.2.22
 - uv: 0.11.2
 - pre-commit: 4.5.1
 - Docker: 29.2.1
+- Vercel: deploying the frontend
+- fly.io: deploying the backend
 
 ### Frontend
 - pnpm: 10.32.1

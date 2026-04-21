@@ -4,6 +4,8 @@ import tailwindcss from "@tailwindcss/vite";
 import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
+const backendUrl = process.env.BACKEND_URL ?? "http://localhost:8000";
+
 // https://vite.dev/config/
 export default defineConfig({
 	plugins: [
@@ -14,6 +16,14 @@ export default defineConfig({
 	resolve: {
 		alias: {
 			"@": path.resolve(__dirname, "./src"),
+		},
+	},
+	server: {
+		proxy: {
+			"/sessions": backendUrl,
+			"/exercises": backendUrl,
+			"/gemini": backendUrl,
+			"/suggest": backendUrl,
 		},
 	},
 });

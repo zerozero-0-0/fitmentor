@@ -47,13 +47,13 @@ class WorkoutDetailCreate(SQLModel):
     exercise_id: int
     weight: float = Field(ge=0)
     reps: int = Field(ge=1)
-    sets: int = Field(ge=1)
+    sets: int = Field(default=1, ge=1)
 
 
 class WorkoutSessionCreate(SQLModel):
     """セッション作成用スキーマ(詳細レコードを含む)"""
     session_date: date
-    condition: int = Field(ge=1, le=5)
+    condition: int = Field(default=3, ge=1, le=5)
     details: list[WorkoutDetailCreate]
 
 
@@ -73,3 +73,33 @@ class WorkoutSessionRead(SQLModel):
     session_date: date
     condition: int
     details: list[WorkoutDetailRead]
+
+
+class SuggestedExercise(SQLModel):
+    """Geminiが提案する1種目"""
+    exercise_id: int
+    name: str
+    sets: int = Field(ge=1, description="セット数(1以上)")
+    reps: int = Field(ge=1, description="1セットあたりの回数(1以上)")
+    weight: float = Field(ge=0,
+        description=(
+            "使用重量(kg)。有酸素種目は0。"
+            "無酸素種目は履歴を参考に設定し、"
+            "履歴がなければ初心者レベルの値"
+            "(例: チェストプレス=30、ラットプルダウン=30、レッグプレス=40)"
+            "を必ず設定すること。0にしてはいけない。"
+        )
+    )
+
+
+class SuggestRequest(SQLModel):
+    """メニュー提案リクエスト"""
+    condition: int = Field(ge=1, le=5)
+    available_hours: int = Field(ge=1, le=3)
+
+
+class SuggestResponse(SQLModel):
+    """Geminiによるメニュー提案レスポンス"""
+    reasoning: str
+    exercises: list[SuggestedExercise]
+    estimated_duration: int
