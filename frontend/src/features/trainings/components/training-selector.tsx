@@ -1,6 +1,12 @@
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight, Sparkles } from "lucide-react";
 import type { FormEvent, TouchEvent } from "react";
 import { useMemo, useRef, useState } from "react";
+import type { components } from "@/api/schema";
+import { SuggestionModal } from "./suggestion-modal";
+
+type SuggestResponse = components["schemas"]["SuggestResponse"];
+type SuggestedExercise = components["schemas"]["SuggestedExercise"];
+
 import { toast } from "sonner";
 
 import bikeMachineIcon from "@/assets/icons/exercises/bike-machine.svg";
@@ -71,6 +77,10 @@ function getTodayLocalDateString(): string {
 }
 
 const DEFAULT_SESSION_CONDITION = 3;
+
+function roundToNearest2_5(value: number): string {
+	return (Math.round(value / 2.5) * 2.5).toFixed(1);
+}
 
 const BODY_GROUP_ORDER: BodyGroup[] = ["腕", "胸", "背中", "足"];
 
@@ -225,6 +235,9 @@ export function TrainingSelector({ exercises }: TrainingSelectorProps) {
 	);
 	const [isSaving, setIsSaving] = useState(false);
 	const [saveError, setSaveError] = useState<string | null>(null);
+	const [showSuggestionModal, setShowSuggestionModal] = useState(false);
+	const [acceptedSuggestion, setAcceptedSuggestion] =
+		useState<SuggestResponse | null>(null);
 	const touchStartX = useRef<number | null>(null);
 	const touchStartY = useRef<number | null>(null);
 
@@ -295,10 +308,22 @@ export function TrainingSelector({ exercises }: TrainingSelectorProps) {
 		touchStartY.current = null;
 	};
 
-	const openRecordPopup = (exercise: Exercise) => {
+	const handleAcceptSuggestion = (suggestion: SuggestResponse) => {
+		setAcceptedSuggestion(suggestion);
+		setShowSuggestionModal(false);
+	};
+
+	const openRecordPopup = (exercise: Exercise, prefill?: SuggestedExercise) => {
 		setSaveError(null);
 		setSelectedExercise(exercise);
-		setRecordForm(exerciseRecords[exercise.id] ?? EMPTY_EXERCISE_RECORD);
+		if (prefill) {
+			setRecordForm({
+				weight: roundToNearest2_5(prefill.weight),
+				reps: String(prefill.reps),
+			});
+		} else {
+			setRecordForm(exerciseRecords[exercise.id] ?? EMPTY_EXERCISE_RECORD);
+		}
 	};
 
 	const closeRecordPopup = () => {
@@ -373,6 +398,67 @@ export function TrainingSelector({ exercises }: TrainingSelectorProps) {
 
 	return (
 		<div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-4 py-8">
+			{/* AIメニュー提案ボタン */}
+			<button
+				type="button"
+				onClick={() => setShowSuggestionModal(true)}
+				className="flex w-full items-center justify-center gap-2 rounded-2xl border border-sky-200 bg-sky-50 py-3.5 text-sm font-semibold text-sky-700 transition hover:bg-sky-100"
+			>
+				<Sparkles className="h-4 w-4" />
+				今日のメニューをAIに提案してもらう
+			</button>
+
+			{/* 提案メニュー表示 */}
+			{acceptedSuggestion && (
+				<section className="space-y-3">
+					<div className="flex items-center justify-between">
+						<h2 className="text-sm font-semibold text-zinc-700">
+							今日の提案メニュー
+						</h2>
+						<button
+							type="button"
+							onClick={() => setAcceptedSuggestion(null)}
+							className="text-xs text-zinc-400 hover:text-zinc-600"
+						>
+							クリア
+						</button>
+					</div>
+					<div className="space-y-2">
+						{acceptedSuggestion.exercises.map((ex) => {
+							const exercise = exercises.find((e) => e.id === ex.exercise_id);
+							const isDone = Boolean(exerciseRecords[ex.exercise_id]);
+							return (
+								<button
+									key={ex.exercise_id}
+									type="button"
+									disabled={!exercise}
+									onClick={() => exercise && openRecordPopup(exercise, ex)}
+									className={`flex w-full items-center justify-between rounded-2xl border px-4 py-3 text-left transition ${
+										isDone
+											? "border-emerald-200 bg-emerald-50"
+											: "border-zinc-200 bg-white hover:bg-zinc-50"
+									}`}
+								>
+									<span
+										className={`font-medium ${isDone ? "text-emerald-700" : "text-zinc-900"}`}
+									>
+										{isDone ? "✓ " : ""}
+										{ex.name}
+									</span>
+									<span className="text-sm text-zinc-500">
+										{ex.weight > 0 ? `${ex.weight}kg × ` : ""}
+										{ex.reps}回 × {ex.sets}セット
+									</span>
+								</button>
+							);
+						})}
+					</div>
+					<p className="text-right text-xs text-zinc-400">
+						目安: 約{acceptedSuggestion.estimated_duration}分
+					</p>
+				</section>
+			)}
+
 			<div className="inline-flex w-fit rounded-2xl border border-zinc-200 bg-zinc-50 p-1.5">
 				{(["anaerobic", "aerobic"] as TrainingType[]).map((trainingType) => (
 					<button
@@ -517,6 +603,13 @@ export function TrainingSelector({ exercises }: TrainingSelectorProps) {
 					</div>
 				</div>
 			) : null}
+
+			{showSuggestionModal && (
+				<SuggestionModal
+					onAccept={handleAcceptSuggestion}
+					onClose={() => setShowSuggestionModal(false)}
+				/>
+			)}
 		</div>
 	);
 }

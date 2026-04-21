@@ -9,12 +9,14 @@ from sqlmodel import Session, SQLModel, select
 from app.database import engine, get_session
 from app.models import (
     Exercise,
+    SuggestRequest,
+    SuggestResponse,
     WorkoutDetail,
     WorkoutSession,
     WorkoutSessionCreate,
     WorkoutSessionRead,
 )
-from app.services.trainer import make_response
+from app.services.trainer import make_response, suggest_menu
 from app.trainings import TRAININGS, TRAININGS_BY_ID
 
 
@@ -96,6 +98,49 @@ def create_session(
     session.commit()
     session.refresh(db_session)
     return db_session
+
+
+@app.post("/suggest")
+def suggest(
+    req: SuggestRequest,
+    session: Annotated[Session, Depends(get_session)],
+) -> SuggestResponse:
+    """コンディションと運動可能時間をもとに今日のメニューを提案"""
+    from datetime import date, timedelta
+
+    since = date.today() - timedelta(days=7)
+    statement = select(WorkoutSession).where(WorkoutSession.session_date >= since)
+    sessions = session.exec(statement).all()
+
+    recent: list[WorkoutSessionRead] = []
+    for ws in sessions:
+        if ws.id is None:
+            continue
+        details_data = []
+        for detail in ws.details:
+            exercise = TRAININGS_BY_ID.get(detail.exercise_id)
+            if exercise is None:
+                continue
+            details_data.append(
+                {
+                    "id": detail.id,
+                    "exercise_id": detail.exercise_id,
+                    "weight": detail.weight,
+                    "reps": detail.reps,
+                    "sets": detail.sets,
+                    "exercise": exercise,
+                }
+            )
+        recent.append(
+            WorkoutSessionRead(
+                id=ws.id,
+                session_date=ws.session_date,
+                condition=ws.condition,
+                details=details_data,
+            )
+        )
+
+    return suggest_menu(req.condition, req.available_hours, recent, TRAININGS)
 
 
 @app.get("/sessions")

@@ -23,6 +23,7 @@ export default defineConfig({
 			"/sessions": backendUrl,
 			"/exercises": backendUrl,
 			"/gemini": backendUrl,
+			"/suggest": backendUrl,
 		},
 	},
 });
