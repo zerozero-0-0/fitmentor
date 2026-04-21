@@ -1,5 +1,11 @@
 fly.toml
 .git/
 __pycache__/
+*.pyc
 .envrc
+.env
+.env.*
 .venv/
+.ruff_cache
+.DS_Store
+Dockerfile*
