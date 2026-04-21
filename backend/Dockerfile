@@ -6,6 +6,7 @@ WORKDIR /app
 
 RUN python -m venv .venv
 COPY pyproject.toml ./
+COPY app/ app/
 RUN .venv/bin/pip install .
 
 FROM python:3.10-slim
