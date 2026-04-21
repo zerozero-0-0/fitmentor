@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { components } from "@/api/schema";
 import { Button } from "@/components/ui/button";
+import { getApiBaseUrl } from "./training-selector";
 
 type SuggestRequest = components["schemas"]["SuggestRequest"];
 type SuggestResponse = components["schemas"]["SuggestResponse"];
@@ -30,7 +31,7 @@ export function SuggestionModal({ onAccept, onClose }: Props) {
 		setIsLoading(true);
 		setError(null);
 		try {
-			const res = await fetch("/suggest", {
+			const res = await fetch(`${getApiBaseUrl()}/suggest`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({

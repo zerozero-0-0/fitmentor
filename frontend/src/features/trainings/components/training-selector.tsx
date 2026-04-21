@@ -1,14 +1,8 @@
 import { ChevronDown, ChevronRight, Sparkles } from "lucide-react";
 import type { FormEvent, TouchEvent } from "react";
 import { useMemo, useRef, useState } from "react";
-import type { components } from "@/api/schema";
-import { SuggestionModal } from "./suggestion-modal";
-
-type SuggestResponse = components["schemas"]["SuggestResponse"];
-type SuggestedExercise = components["schemas"]["SuggestedExercise"];
-
 import { toast } from "sonner";
-
+import type { components } from "@/api/schema";
 import bikeMachineIcon from "@/assets/icons/exercises/bike-machine.svg";
 import chestPressIcon from "@/assets/icons/exercises/chest-press.svg";
 import chinUpAndDownIcon from "@/assets/icons/exercises/chin-up-and-down.svg";
@@ -25,6 +19,10 @@ import type {
 	TrainingType,
 	WorkoutSessionCreatePayload,
 } from "@/features/trainings/types";
+import { SuggestionModal } from "./suggestion-modal";
+
+type SuggestResponse = components["schemas"]["SuggestResponse"];
+type SuggestedExercise = components["schemas"]["SuggestedExercise"];
 
 const TRAINING_TYPE_LABEL: Record<TrainingType, string> = {
 	aerobic: "有酸素",
@@ -64,7 +62,7 @@ const EXERCISE_ICON_BY_ID: Partial<Record<number, string>> = {
 	10: legCurlIcon,
 };
 
-function getApiBaseUrl(): string {
+export function getApiBaseUrl(): string {
 	return "";
 }
 
