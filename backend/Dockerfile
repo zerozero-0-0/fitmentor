@@ -1,13 +1,14 @@
-FROM python:3.10 AS builder
+FROM ghcr.io/astral-sh/uv:python3.10-bookworm-slim AS builder
 
-ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1
+ENV UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy
 WORKDIR /app
 
-RUN python -m venv .venv
-COPY pyproject.toml ./
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-install-project --no-dev
+
 COPY app/ app/
-RUN .venv/bin/pip install .
+RUN uv sync --frozen --no-dev
 
 FROM python:3.10-slim
 WORKDIR /app
