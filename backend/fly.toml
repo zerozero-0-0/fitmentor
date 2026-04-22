@@ -9,7 +9,7 @@
 #   5. fly secrets set FRONTEND_ORIGIN=https://<your-app>.vercel.app
 #   6. fly deploy
 
-app = 'backend-snowy-cloud-4235'
+app = '<your-fly-app-name>'
 primary_region = 'nrt'
 
 [build]
