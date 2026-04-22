@@ -149,8 +149,9 @@ export function SuggestionModal({ onAccept, onClose }: Props) {
 									>
 										<span className="font-medium text-zinc-900">{ex.name}</span>
 										<span className="text-sm text-zinc-500">
-											{ex.weight > 0 ? `${ex.weight}kg × ` : ""}
-											{ex.reps}回 × {ex.sets}セット
+											{ex.training_type === "aerobic"
+												? `${ex.reps}分`
+												: `${ex.weight > 0 ? `${ex.weight}kg × ` : ""}${ex.reps}回 × ${ex.sets}セット`}
 										</span>
 									</div>
 								))}

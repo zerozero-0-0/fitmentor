@@ -159,14 +159,16 @@ export interface components {
 			exercise_id: number;
 			/** Name */
 			name: string;
+			/** Training Type */
+			training_type: "aerobic" | "anaerobic";
 			/**
 			 * Sets
-			 * @description セット数（1以上）
+			 * @description セット数（1以上）。有酸素種目は1
 			 */
 			sets: number;
 			/**
 			 * Reps
-			 * @description 1セットあたりの回数（1以上）
+			 * @description 有酸素種目は運動時間(分)、無酸素種目は1セットあたりの回数
 			 */
 			reps: number;
 			/**
