@@ -1,31 +1,11 @@
-# Virtual environments
-.venv
-
-# Python cache
-__pycache__
+fly.toml
+.git/
+__pycache__/
 *.pyc
-*.pyo
-*.pyd
-.Python
-
-# Tool caches
-.ruff_cache
-.mypy_cache
-
-# Environment files
+.envrc
 .env
 .env.*
-!.env.example
-
-# Version control and OS
-.git
-.gitignore
+.venv/
+.ruff_cache
 .DS_Store
-
-# Documentation and Docker files
-README.md
-Dockerfile.dev
-Dockerfile
-
-# Python version file
-.python-version
+Dockerfile*

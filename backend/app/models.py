@@ -79,8 +79,17 @@ class SuggestedExercise(SQLModel):
     """Geminiが提案する1種目"""
     exercise_id: int
     name: str
-    sets: int = Field(ge=1, description="セット数(1以上)")
-    reps: int = Field(ge=1, description="1セットあたりの回数(1以上)")
+    training_type: TrainingType = Field(
+        description="有酸素種目は'aerobic'、無酸素種目は'anaerobic'"
+    )
+    sets: int = Field(ge=1, description="セット数(1以上)。有酸素種目は1を設定すること")
+    reps: int = Field(
+        ge=1,
+        description=(
+            "有酸素種目は運動時間(分)を設定すること(例: 20分なら20)。"
+            "無酸素種目は1セットあたりの回数(1以上)を設定すること"
+        ),
+    )
     weight: float = Field(ge=0,
         description=(
             "使用重量(kg)。有酸素種目は0。"
